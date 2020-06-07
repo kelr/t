@@ -19,7 +19,8 @@ func (t *TaskList) listTasks() {
 	if len(t.Tasks) == 0 {
 		fmt.Println("Task list is empty! Use 'tl add' to add a new task")
 	}
-	fmt.Println("Open =============================")
+	fmt.Println("\nOpen")
+
 	var openTasks []int
 	var doneTasks []int
 	for key := range t.Tasks {
@@ -36,7 +37,7 @@ func (t *TaskList) listTasks() {
 		printTask(t.Tasks[id])
 	}
 	if len(doneTasks) > 0 {
-		fmt.Println("Done =============================")
+		fmt.Println("\nDone")
 	}
 	for _, id := range doneTasks {
 		printTask(t.Tasks[id])
@@ -63,7 +64,6 @@ func (t *TaskList) addTask(task string) {
 		Status:      Open,
 	}
 	t.Tasks[newId] = *newTask
-	//t.Tasks = append(t.Tasks, *newTask)
 	fmt.Println("Added Task", newTask.Id, "-", newTask.Description)
 }
 
@@ -75,6 +75,7 @@ func (t *TaskList) doneTask(Id int) error {
 	val := t.Tasks[Id]
 	val.Status = Done
 	t.Tasks[Id] = val
+	fmt.Println("Task", Id, "done.")
 	return nil
 }
 
@@ -86,6 +87,7 @@ func (t *TaskList) resetTask(Id int) error {
 	val := t.Tasks[Id]
 	val.Status = Open
 	t.Tasks[Id] = val
+	fmt.Println("Task", Id, "is open again.")
 	return nil
 }
 
@@ -95,6 +97,7 @@ func (t *TaskList) delTask(Id int) error {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
 	delete(t.Tasks, Id)
+	fmt.Println("Deleted Task", Id, ".")
 	return nil
 }
 
@@ -106,6 +109,7 @@ func (t *TaskList) editTask(Id int, newDesc string) error {
 	val := t.Tasks[Id]
 	val.Description = newDesc
 	t.Tasks[Id] = val
+	fmt.Println("Edited Task", Id, ".")
 	return nil
 }
 
@@ -120,5 +124,6 @@ func printTask(task Task) {
 	if task.Status != Open {
 		status = "[X]"
 	}
-	fmt.Println(status, task.Id, "-", task.Description)
+	fmt.Printf("%s    %-5v", status, task.Id)
+	fmt.Println(task.Description)
 }

@@ -66,7 +66,6 @@ func main() {
 	case "add":
 		if len(os.Args) > 2 {
 			tl.addTask(os.Args[2])
-			tl.listTasks()
 		} else {
 			displayHelp()
 			os.Exit(0)
@@ -78,7 +77,6 @@ func main() {
 			if err := tl.delTask(id); err != nil {
 				fmt.Println(err)
 			}
-			tl.listTasks()
 		} else {
 			displayHelp()
 			os.Exit(0)
@@ -90,7 +88,6 @@ func main() {
 			if err := tl.editTask(id, os.Args[3]); err != nil {
 				fmt.Println(err)
 			}
-			tl.listTasks()
 		} else {
 			displayHelp()
 			os.Exit(0)
@@ -102,7 +99,6 @@ func main() {
 			if err := tl.doneTask(id); err != nil {
 				fmt.Println(err)
 			}
-			tl.listTasks()
 		} else {
 			displayHelp()
 			os.Exit(0)
@@ -114,7 +110,6 @@ func main() {
 			if err := tl.resetTask(id); err != nil {
 				fmt.Println(err)
 			}
-			tl.listTasks()
 		} else {
 			displayHelp()
 			os.Exit(0)

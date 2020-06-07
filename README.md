@@ -1,31 +1,41 @@
-# tl - Essentialist Tasklist
+# tl
 
-tl is a lightweight command line task list without the bells and whistles of heavier lists like Taskwarrior.
+### An essentalist task list
+
+tl is a lightweight CLI task list without the bells and whistles of heavier lists like Taskwarrior.
+
+tl aims to provide the simplicity of t with some of the features of ultralist. 
 
 ## Installation
 
 ### Compile from Source
 ```bash
-$ go get github.com/kelr/tl
-$ go install github.com/kelr/tl
+go get github.com/kelr/tl
+go install github.com/kelr/tl
 ```
+
+### Precompiled Binaries
+Binaries can be found at [releases][rel].
+
+[rel]: https://github.com/kelr/tl/releases
+
 ## Usage
-tl looks for a task file in your current directory. 
+Tasks are stored in a .tasks.json in each directory.
 
 ### Create a new list
-`$ tl init`
+```tl init```
 
-### Print the list
-`$ tl`
+### Show the list
+```tl```
 
 ### Add a new task
-`$ tl add "hi im a new task"`
+```tl add "hi im a new task"```
 
 ### Complete a task
-`$ tl done 0`
+```tl done 0```
 
 ### Delete a task
-`$ tl del 0`
+```tl del 0```
 
 ### Edit a task
-`$ tl edit 0`
+```tl edit 0 "hi im no longer new"```
