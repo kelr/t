@@ -32,8 +32,10 @@ func logError(err error) {
 }
 
 func main() {
-	tl, err := loadTasks()
-	logError(err)
+	tl = new(TaskList)
+	if err := tl.loadTasks(); err != nil {
+		log.Fatal(err)
+	}
 
 	if len(os.Args) < 2 {
 		tl.listTasks()

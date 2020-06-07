@@ -7,45 +7,26 @@ import (
 	"os"
 )
 
-func loadTasks() (*TaskList, error) {
-	tl := new(TaskList)
-	if _, err := os.Stat(taskList); err == nil {
-		f, err := os.Open(taskList)
-		logError(err)
-		defer f.Close()
+// Creates a new TaskList and populates it with the contents of the task list file
+func (tl *TaskList) loadTasks() error {
+	f, err := os.OpenFile(taskFile, os.O_RDWR|os.O_CREATE, 0755)
+	logError(err)
+	defer f.Close()
 
-		err = json.NewDecoder(f).Decode(tl)
-		if err == io.EOF {
-			err = nil
-		}
-		return tl, err
-	} else if os.IsNotExist(err) {
-		f, err := os.Create(taskList)
-		logError(err)
-		defer f.Close()
-
-		log.Println("New task list created")
-		return tl, nil
-	} else {
-		// The file could exist but stat could fail due to perms
-		return nil, err
+	if err = json.NewDecoder(f).Decode(tl); err == io.EOF {
+		err = nil
 	}
+	return tl, err
 }
 
+// Flush the contents of the TaskList to the task list file.
 func (tl *TaskList) flushTasks() error {
-	if _, err := os.Stat(taskList); err == nil {
-		f, err := os.OpenFile(taskList, os.O_RDWR, 0644)
-		logError(err)
-		defer f.Close()
+	f, err := os.OpenFile(taskFile, os.O_RDWR|os.O_CREATE, 0755)
+	logError(err)
+	defer f.Close()
 
-		err = json.NewEncoder(f).Encode(tl)
-		if err == io.EOF {
-			err = nil
-		}
-		return err
-	} else if os.IsNotExist(err) {
-		logError(err)
-		return err
+	if err = json.NewEncoder(f).Encode(tl); err == io.EOF {
+		err = nil
 	}
-	return nil
+	return err
 }
