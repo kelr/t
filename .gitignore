@@ -15,4 +15,5 @@
 # vendor/
 
 # Default Task list
-tasks
+.tasks.json
+

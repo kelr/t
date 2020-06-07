@@ -4,7 +4,10 @@
 
 tl is a lightweight CLI task list without the bells and whistles of heavier lists like Taskwarrior.
 
-tl aims to provide the simplicity of t with some of the features of ultralist. 
+tl aims to provide the simplicity of [t][tlink] with some of the features of [ultralist][ultralink]. 
+
+[tlink]: https://github.com/sjl/t
+[ultralink]: https://github.com/ultralist/ultralist
 
 ## Installation
 

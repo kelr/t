@@ -10,7 +10,7 @@ import (
 type status int
 
 const (
-	taskFile        = "tasks"
+	taskFile        = ".tasks.json"
 	Open     status = iota
 	Done
 	Archived
