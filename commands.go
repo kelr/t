@@ -31,6 +31,7 @@ func (t *TaskList) listTasks() {
 	}
 }
 
+// Get the next available task Id.
 func (t *TaskList) getNextId() int {
 	newId := 0
 	for {
