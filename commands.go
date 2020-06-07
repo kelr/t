@@ -17,16 +17,28 @@ const (
 // Prints the current task list.
 func (t *TaskList) listTasks() {
 	if len(t.Tasks) == 0 {
-		fmt.Println("Wowee no tasks")
+		fmt.Println("Task list is empty! Use 'tl add' to add a new task")
 	}
-
-	var keys []int
+	fmt.Println("Open =============================")
+	var openTasks []int
+	var doneTasks []int
 	for key := range t.Tasks {
-		keys = append(keys, key)
+		if t.Tasks[key].Status == Open {
+			openTasks = append(openTasks, key)
+		} else if t.Tasks[key].Status == Done {
+			doneTasks = append(doneTasks, key)
+		}
 	}
-	sort.Ints(keys)
+	sort.Ints(openTasks)
+	sort.Ints(doneTasks)
 
-	for _, id := range keys {
+	for _, id := range openTasks {
+		printTask(t.Tasks[id])
+	}
+	if len(doneTasks) > 0 {
+		fmt.Println("Done =============================")
+	}
+	for _, id := range doneTasks {
 		printTask(t.Tasks[id])
 	}
 }
@@ -55,13 +67,24 @@ func (t *TaskList) addTask(task string) {
 	fmt.Println("Added Task", newTask.Id, "-", newTask.Description)
 }
 
-// Mark a task as complete.
-func (t *TaskList) completeTask(Id int) error {
+// Mark an open task as done.
+func (t *TaskList) doneTask(Id int) error {
 	if _, ok := t.Tasks[Id]; !ok {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
 	val := t.Tasks[Id]
-	val.Status = Complete
+	val.Status = Done
+	t.Tasks[Id] = val
+	return nil
+}
+
+// Mark a done task as open again.
+func (t *TaskList) resetTask(Id int) error {
+	if _, ok := t.Tasks[Id]; !ok {
+		return fmt.Errorf("Cannot find Task %d", Id)
+	}
+	val := t.Tasks[Id]
+	val.Status = Open
 	t.Tasks[Id] = val
 	return nil
 }
@@ -72,6 +95,17 @@ func (t *TaskList) delTask(Id int) error {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
 	delete(t.Tasks, Id)
+	return nil
+}
+
+// Edit a tasks description
+func (t *TaskList) editTask(Id int, newDesc string) error {
+	if _, ok := t.Tasks[Id]; !ok {
+		return fmt.Errorf("Cannot find Task %d", Id)
+	}
+	val := t.Tasks[Id]
+	val.Description = newDesc
+	t.Tasks[Id] = val
 	return nil
 }
 

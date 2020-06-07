@@ -12,7 +12,7 @@ type status int
 const (
 	taskFile        = "tasks"
 	Open     status = iota
-	Complete
+	Done
 	Archived
 )
 
@@ -33,11 +33,27 @@ func logError(err error) {
 }
 
 func main() {
+	// Handle init first since it needs to create the task file
+	if len(os.Args) == 2 && os.Args[1] == "init" {
+		if err := createTaskFile(); err != nil {
+			fmt.Println("A Task File already exists in the current directory.")
+			os.Exit(1)
+		}
+		fmt.Println("Created a new Task File.")
+		os.Exit(0)
+	}
+
 	tl := &TaskList{make(map[int]Task)}
 	if err := tl.loadTasks(); err != nil {
+		// Handle PathError specifically as it indicates the file does not exist
+		if _, ok := err.(*os.PathError); ok {
+			fmt.Println("No task file found. Use 'tl init' to start a new task list here")
+			os.Exit(0)
+		}
 		log.Fatal(err)
 	}
 
+	// Handle just "tl", which is an alias for "tl list open"
 	if len(os.Args) < 2 {
 		tl.listTasks()
 		return
@@ -48,18 +64,60 @@ func main() {
 		tl.listTasks()
 		os.Exit(0)
 	case "add":
-		tl.addTask(os.Args[2])
+		if len(os.Args) > 2 {
+			tl.addTask(os.Args[2])
+			tl.listTasks()
+		} else {
+			displayHelp()
+			os.Exit(0)
+		}
 	case "del":
-		id, err := strconv.Atoi(os.Args[2])
-		logError(err)
-		if err := tl.delTask(id); err != nil {
-			fmt.Println(err)
+		if len(os.Args) > 2 {
+			id, err := strconv.Atoi(os.Args[2])
+			logError(err)
+			if err := tl.delTask(id); err != nil {
+				fmt.Println(err)
+			}
+			tl.listTasks()
+		} else {
+			displayHelp()
+			os.Exit(0)
+		}
+	case "edit":
+		if len(os.Args) > 3 {
+			id, err := strconv.Atoi(os.Args[2])
+			logError(err)
+			if err := tl.editTask(id, os.Args[3]); err != nil {
+				fmt.Println(err)
+			}
+			tl.listTasks()
+		} else {
+			displayHelp()
+			os.Exit(0)
 		}
 	case "done":
-		id, err := strconv.Atoi(os.Args[2])
-		logError(err)
-		if err := tl.completeTask(id); err != nil {
-			fmt.Println(err)
+		if len(os.Args) > 2 {
+			id, err := strconv.Atoi(os.Args[2])
+			logError(err)
+			if err := tl.doneTask(id); err != nil {
+				fmt.Println(err)
+			}
+			tl.listTasks()
+		} else {
+			displayHelp()
+			os.Exit(0)
+		}
+	case "reset":
+		if len(os.Args) > 2 {
+			id, err := strconv.Atoi(os.Args[2])
+			logError(err)
+			if err := tl.resetTask(id); err != nil {
+				fmt.Println(err)
+			}
+			tl.listTasks()
+		} else {
+			displayHelp()
+			os.Exit(0)
 		}
 	case "help":
 		displayHelp()
@@ -68,6 +126,7 @@ func main() {
 		displayHelp()
 		os.Exit(0)
 	}
+
 	if err := tl.flushTasks(); err != nil {
 		log.Fatal(err)
 	}
