@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"os"
 )
 
@@ -16,7 +15,7 @@ func (tl *TaskList) loadTasks() error {
 	if err = json.NewDecoder(f).Decode(tl); err == io.EOF {
 		err = nil
 	}
-	return tl, err
+	return err
 }
 
 // Flush the contents of the TaskList to the task list file.
@@ -24,8 +23,9 @@ func (tl *TaskList) flushTasks() error {
 	f, err := os.OpenFile(taskFile, os.O_RDWR|os.O_CREATE, 0755)
 	logError(err)
 	defer f.Close()
-
-	if err = json.NewEncoder(f).Encode(tl); err == io.EOF {
+	enc := json.NewEncoder(f)
+	enc.SetIndent("", " ")
+	if err = enc.Encode(tl); err == io.EOF {
 		err = nil
 	}
 	return err

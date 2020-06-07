@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -9,7 +10,7 @@ import (
 type status int
 
 const (
-	taskList        = "tasks"
+	taskFile        = "tasks"
 	Open     status = iota
 	Complete
 	Archived
@@ -22,7 +23,7 @@ type Task struct {
 }
 
 type TaskList struct {
-	Tasks []Task `json:"tasks,omitempty"`
+	Tasks map[int]Task `json:"tasks,omitempty"`
 }
 
 func logError(err error) {
@@ -32,7 +33,7 @@ func logError(err error) {
 }
 
 func main() {
-	tl = new(TaskList)
+	tl := &TaskList{make(map[int]Task)}
 	if err := tl.loadTasks(); err != nil {
 		log.Fatal(err)
 	}
@@ -49,11 +50,17 @@ func main() {
 	case "add":
 		tl.addTask(os.Args[2])
 	case "del":
-		tl.delTask()
+		id, err := strconv.Atoi(os.Args[2])
+		logError(err)
+		if err := tl.delTask(id); err != nil {
+			fmt.Println(err)
+		}
 	case "done":
 		id, err := strconv.Atoi(os.Args[2])
 		logError(err)
-		tl.completeTask(id)
+		if err := tl.completeTask(id); err != nil {
+			fmt.Println(err)
+		}
 	case "help":
 		displayHelp()
 		os.Exit(0)
