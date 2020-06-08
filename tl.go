@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type status int
@@ -123,7 +124,7 @@ func main() {
 		os.Exit(0)
 	case "add":
 		if len(os.Args) > 2 {
-			tl.addTask(os.Args[2])
+			tl.addTask(strings.Join(os.Args[2:], " "))
 		} else {
 			displayHelp()
 			os.Exit(0)
@@ -149,7 +150,7 @@ func main() {
 				fmt.Println("Invalid Task ID to edit")
 				os.Exit(1)
 			}
-			if err := tl.editTask(id, os.Args[3]); err != nil {
+			if err := tl.editTask(id, strings.Join(os.Args[3:], " ")); err != nil {
 				fmt.Println(err)
 			}
 		} else {
@@ -207,7 +208,7 @@ func main() {
 				os.Exit(0)
 			}
 		}
-	
+
 	case "help":
 		displayHelp()
 		os.Exit(0)
