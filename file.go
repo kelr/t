@@ -32,7 +32,7 @@ func (tl *TaskList) loadTasks() error {
 
 // Flush the contents of the TaskList to the task list file.
 func (tl *TaskList) flushTasks() error {
-	f, err := os.OpenFile(taskFile, os.O_RDWR|os.O_CREATE, 0755)
+	f, err := os.OpenFile(taskFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return err
 	}
