@@ -1,6 +1,6 @@
 # tl
-
-### An essentalist task list
+=======
+### An Essentalist Task List
 
 tl is a lightweight CLI task list without the bells and whistles of heavier lists like Taskwarrior.
 
@@ -23,22 +23,34 @@ Binaries can be found at [releases][rel].
 [rel]: https://github.com/kelr/tl/releases
 
 ## Usage
-Tasks are stored in a .tasks.json in each directory.
+Tasks are stored in .tasks.json per directory.
 
-### Create a new list
+### New list
 ```tl init```
 
-### Show the list
+### Show list
 ```tl```
 
-### Add a new task
-```tl add "hi im a new task"```
+### Add task
+```tl add "New Task :)"```
 
-### Complete a task
+### Complete task
 ```tl done 0```
+If the task is already done, this will revert it.
 
-### Delete a task
+### Edit task
+```tl edit 0 "No longer new D:"```
+
+### Store task
+```tl store 0```
+Store only works on tasks marked done.
+If the task is already stored, this will un-store it.
+
+### Delete task
 ```tl del 0```
 
-### Edit a task
-```tl edit 0 "hi im no longer new"```
+### Delete all stored tasks
+```tl del store```
+
+## Contributions
+Any and all contributions or bug fixes are appreciated.

@@ -16,17 +16,18 @@ const (
 
 // Prints the current task list.
 func (t *TaskList) listTasks() {
-	if len(t.Tasks) == 0 {
+	if len(t.currentList().Tasks) == 0 {
 		fmt.Println("Task list is empty! Use 'tl add' to add a new task")
+		return
 	}
-	fmt.Println("\nOpen")
+	fmt.Println("\n" + t.CurrentProject)
 
 	var openTasks []int
 	var doneTasks []int
-	for key := range t.Tasks {
-		if t.Tasks[key].Status == Open {
+	for key := range t.currentList().Tasks {
+		if t.currentList().Tasks[key].Status == Open {
 			openTasks = append(openTasks, key)
-		} else if t.Tasks[key].Status == Done {
+		} else if t.currentList().Tasks[key].Status == Done {
 			doneTasks = append(doneTasks, key)
 		}
 	}
@@ -34,13 +35,11 @@ func (t *TaskList) listTasks() {
 	sort.Ints(doneTasks)
 
 	for _, id := range openTasks {
-		printTask(t.Tasks[id])
+		printTask(t.currentList().Tasks[id])
 	}
-	if len(doneTasks) > 0 {
-		fmt.Println("\nDone")
-	}
+	fmt.Print("\n")
 	for _, id := range doneTasks {
-		printTask(t.Tasks[id])
+		printTask(t.currentList().Tasks[id])
 	}
 }
 
@@ -48,7 +47,7 @@ func (t *TaskList) listTasks() {
 func (t *TaskList) getNextId() int {
 	newId := 0
 	for {
-		if _, ok := t.Tasks[newId]; !ok {
+		if _, ok := t.currentList().Tasks[newId]; !ok {
 			return newId
 		}
 		newId++
@@ -63,53 +62,73 @@ func (t *TaskList) addTask(task string) {
 		Description: task,
 		Status:      Open,
 	}
-	t.Tasks[newId] = *newTask
+	t.currentList().Tasks[newId] = *newTask
 	fmt.Println("Added Task", newTask.Id, "-", newTask.Description)
 }
 
 // Mark an open task as done.
 func (t *TaskList) doneTask(Id int) error {
-	if _, ok := t.Tasks[Id]; !ok {
+	if _, ok := t.currentList().Tasks[Id]; !ok {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
-	val := t.Tasks[Id]
-	val.Status = Done
-	t.Tasks[Id] = val
-	fmt.Println("Task", Id, "done.")
+	val := t.currentList().Tasks[Id]
+	if val.Status == Open {
+		val.Status = Done
+		t.currentList().Tasks[Id] = val
+		fmt.Println("Task", Id, "done")
+	} else if val.Status == Done {
+		val.Status = Open
+		t.currentList().Tasks[Id] = val
+		fmt.Println("Task", Id, "open")
+	} else {
+		fmt.Println("Task", Id, "is archived.")
+	}
+
 	return nil
 }
 
-// Mark a done task as open again.
-func (t *TaskList) resetTask(Id int) error {
-	if _, ok := t.Tasks[Id]; !ok {
+// Store a task.
+func (t *TaskList) storeTask(Id int) error {
+	if _, ok := t.currentList().Tasks[Id]; !ok {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
-	val := t.Tasks[Id]
-	val.Status = Open
-	t.Tasks[Id] = val
-	fmt.Println("Task", Id, "is open again.")
+	val := t.currentList().Tasks[Id]
+	if val.Status == Done {
+		val.Status = Stored
+		t.currentList().Tasks[Id] = val
+		fmt.Println("Task", Id, "stored")
+	} else if val.Status == Open {
+		val.Status = Open
+		t.currentList().Tasks[Id] = val
+		fmt.Println("Cannot store open tasks!")
+	} else {
+		val.Status = Done
+		t.currentList().Tasks[Id] = val
+		fmt.Println("Task", Id, "un-stored")
+	}
+
 	return nil
 }
 
 // Deletes a task from the task list.
 func (t *TaskList) delTask(Id int) error {
-	if _, ok := t.Tasks[Id]; !ok {
+	if _, ok := t.currentList().Tasks[Id]; !ok {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
-	delete(t.Tasks, Id)
-	fmt.Println("Deleted Task", Id, ".")
+	delete(t.currentList().Tasks, Id)
+	fmt.Println("Deleted Task", Id)
 	return nil
 }
 
 // Edit a tasks description
 func (t *TaskList) editTask(Id int, newDesc string) error {
-	if _, ok := t.Tasks[Id]; !ok {
+	if _, ok := t.currentList().Tasks[Id]; !ok {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
-	val := t.Tasks[Id]
+	val := t.currentList().Tasks[Id]
 	val.Description = newDesc
-	t.Tasks[Id] = val
-	fmt.Println("Edited Task", Id, ".")
+	t.currentList().Tasks[Id] = val
+	fmt.Println("Edited Task", Id)
 	return nil
 }
 
