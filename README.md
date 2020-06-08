@@ -29,7 +29,7 @@ Tasks are stored in .tasks.json per directory.
 ```tl init```
 
 ### Add task
-```tl add "New Task :)"```
+```tl add New Task```
 
 ### Show list
 ```tl```
@@ -39,7 +39,7 @@ Tasks are stored in .tasks.json per directory.
 If the task is already done, this will revert it.
 
 ### Edit task
-```tl edit 0 "No longer new D:"```
+```tl edit 0 No longer new D:```
 
 
 ### Store task
@@ -49,6 +49,7 @@ If the task is already stored, this will un-store it.
 
 ### Delete task
 ```tl del 0```
+This is permanent.
 
 ### Delete all stored tasks
 ```tl del store```

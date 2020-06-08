@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"sort"
 )
 
@@ -130,7 +129,41 @@ func (t *TaskList) editTask(Id int, newDesc string) error {
 
 // Display the help menu.
 func displayHelp() {
-	log.Println("help")
+	fmt.Println("New List:")
+	fmt.Println("tl init\n")
+
+	fmt.Println("Add Task:")
+	fmt.Println("tl add New Task\n")
+
+	fmt.Println("Show List:")
+	fmt.Println("tl\n")
+
+	fmt.Println("Complete Task:")
+	fmt.Println("tl done 0\n")
+
+	fmt.Println("Edit Task:")
+	fmt.Println("tl edit 0 New Description\n")
+
+	fmt.Println("Store Task:")
+	fmt.Println("tl store 0\n")
+
+	fmt.Println("Delete Task:")
+	fmt.Println("tl del 0\n")
+
+	fmt.Println("Add Project:")
+	fmt.Println("tl p add projectname\n")
+
+	fmt.Println("List Projects:")
+	fmt.Println("tl p\n")
+
+	fmt.Println("Switch Current Project:")
+	fmt.Println("tl p projectname\n")
+
+	fmt.Println("Edit Project:")
+	fmt.Println("tl p edit projectname newname\n")
+
+	fmt.Println("Delete Project:")
+	fmt.Println("tl p del projectname\n")
 }
 
 // Prints out a single task.
