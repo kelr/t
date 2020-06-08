@@ -16,10 +16,6 @@ const (
 
 // Prints the current task list.
 func (t *TaskList) listTasks() {
-	if len(t.currentList().Tasks) == 0 {
-		fmt.Println("Task list is empty! Use 'tl add' to add a new task")
-		return
-	}
 	fmt.Println("\n" + t.CurrentProject)
 
 	var openTasks []int

@@ -43,6 +43,16 @@ func (t *TaskList) currentList() Project {
 	return t.Projects[t.CurrentProject]
 }
 
+func (t *TaskList) listProjects() {
+	for name := range t.Projects {
+		if name == t.CurrentProject {
+			fmt.Println("*" + name)
+		} else {
+			fmt.Println(name)
+		}
+	}
+}
+
 func (t *TaskList) switchProject(name string) {
 	if _, ok := t.Projects[name]; ok {
 		t.CurrentProject = name
@@ -174,38 +184,30 @@ func main() {
 			displayHelp()
 			os.Exit(0)
 		}
-	case "switch":
-		if len(os.Args) > 2 {
+	case "p":
+		if len(os.Args) == 2 {
+			tl.listProjects()
+		} else if len(os.Args) == 3 {
 			tl.switchProject(os.Args[2])
 		} else {
-			displayHelp()
-			os.Exit(0)
+			switch os.Args[2] {
+			case "add":
+				tl.addProject(os.Args[3])
+			case "edit":
+				if len(os.Args) > 3 {
+					tl.editProject(os.Args[3], os.Args[4])
+				} else {
+					displayHelp()
+					os.Exit(0)
+				}
+			case "del":
+				tl.delProject(os.Args[3])
+			default:
+				displayHelp()
+				os.Exit(0)
+			}
 		}
-
-	case "addproj":
-		if len(os.Args) > 2 {
-			tl.addProject(os.Args[2])
-		} else {
-			displayHelp()
-			os.Exit(0)
-		}
-
-	case "editproj":
-		if len(os.Args) > 3 {
-			tl.editProject(os.Args[2], os.Args[3])
-		} else {
-			displayHelp()
-			os.Exit(0)
-		}
-
-	case "delproj":
-		if len(os.Args) > 2 {
-			tl.delProject(os.Args[2])
-		} else {
-			displayHelp()
-			os.Exit(0)
-		}
-
+	
 	case "help":
 		displayHelp()
 		os.Exit(0)

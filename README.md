@@ -28,11 +28,11 @@ Tasks are stored in .tasks.json per directory.
 ### New list
 ```tl init```
 
-### Show list
-```tl```
-
 ### Add task
 ```tl add "New Task :)"```
+
+### Show list
+```tl```
 
 ### Complete task
 ```tl done 0```
@@ -40,6 +40,7 @@ If the task is already done, this will revert it.
 
 ### Edit task
 ```tl edit 0 "No longer new D:"```
+
 
 ### Store task
 ```tl store 0```
@@ -51,6 +52,28 @@ If the task is already stored, this will un-store it.
 
 ### Delete all stored tasks
 ```tl del store```
+
+
+## Using Projects
+Each task file can store multiple projects.
+The default project is called main.
+
+### Add project
+```tl p add new-proj```
+
+### List projects
+```tl p```
+
+### Switch current project
+```tl p new-proj```
+
+### Edit project 
+```tl p edit new-proj bettername```
+
+### Delete project
+```tl p del bettername```
+
+
 
 ## Contributions
 Any and all contributions or bug fixes are appreciated.
