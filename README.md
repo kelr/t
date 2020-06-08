@@ -1,5 +1,5 @@
 # tl
-=======
+
 ### An Essentalist Task List
 
 tl is a lightweight CLI task list without the bells and whistles of heavier lists like Taskwarrior.
@@ -36,6 +36,7 @@ Tasks are stored in .tasks.json per directory.
 
 ### Complete task
 ```tl done 0```
+
 If the task is already done, this will revert it.
 
 ### Edit task
@@ -44,11 +45,14 @@ If the task is already done, this will revert it.
 
 ### Store task
 ```tl store 0```
+
 Store only works on tasks marked done.
+
 If the task is already stored, this will un-store it.
 
 ### Delete task
 ```tl del 0```
+
 This is permanent.
 
 ### Delete all stored tasks
@@ -57,6 +61,7 @@ This is permanent.
 
 ## Using Projects
 Each task file can store multiple projects.
+
 The default project is called main.
 
 ### Add project
