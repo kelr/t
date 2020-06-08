@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-type status int
+type Status int
 
 const (
 	taskFile           = ".tasks.json"
 	mainProject        = "main"
-	Open        status = iota
+	Open        Status = iota
 	Done
 	Stored
 )
@@ -31,7 +31,7 @@ type Project struct {
 type Task struct {
 	Id          int    `json:"id"`
 	Description string `json:"description"`
-	Status      status `json:"status"`
+	Status      Status `json:"status"`
 }
 
 func newTaskList() *TaskList {
@@ -67,14 +67,34 @@ func main() {
 
 	// Handle just "tl", which is an alias for "tl list open"
 	if len(os.Args) < 2 {
+		fmt.Println("\n" + tl.CurrentProject)
 		tl.listTasks()
 		return
 	}
 
 	switch os.Args[1] {
 	case "list":
-		tl.listTasks()
-		os.Exit(0)
+		if len(os.Args) > 2 {
+			fmt.Println("\n" + tl.CurrentProject)
+			if os.Args[2] == "open" {
+				tl.listStatus(Open)
+			} else if os.Args[2] == "done" {
+				tl.listStatus(Done)
+			} else if os.Args[2] == "store" {
+				tl.listStatus(Stored)
+			} else if os.Args[2] == "all" {
+				tl.listStatus(Open)
+				tl.listStatus(Done)
+				tl.listStatus(Stored)
+			} else {
+				displayHelp()
+				os.Exit(0)
+			}
+		} else {
+			fmt.Println("\n" + tl.CurrentProject)
+			tl.listTasks()
+			os.Exit(0)
+		}
 	case "add":
 		if len(os.Args) > 2 {
 			tl.addTask(strings.Join(os.Args[2:], " "))
@@ -126,6 +146,10 @@ func main() {
 		}
 	case "store":
 		if len(os.Args) > 2 {
+			if os.Args[2] == "all" {
+				tl.storeAll()
+				break
+			}
 			id, err := strconv.Atoi(os.Args[2])
 			if err != nil {
 				fmt.Println("Invalid Task ID to store")

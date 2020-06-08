@@ -15,25 +15,21 @@ const (
 
 // Prints the current task list.
 func (t *TaskList) listTasks() {
-	fmt.Println("\n" + t.CurrentProject)
+	t.listStatus(Open)
+	t.listStatus(Done)
+}
 
-	var openTasks []int
-	var doneTasks []int
+// Prints tasks by status
+func (t *TaskList) listStatus(status Status) {
+	fmt.Println("")
+	var tasks []int
 	for key := range t.currentList().Tasks {
-		if t.currentList().Tasks[key].Status == Open {
-			openTasks = append(openTasks, key)
-		} else if t.currentList().Tasks[key].Status == Done {
-			doneTasks = append(doneTasks, key)
+		if t.currentList().Tasks[key].Status == status {
+			tasks = append(tasks, key)
 		}
+		sort.Ints(tasks)
 	}
-	sort.Ints(openTasks)
-	sort.Ints(doneTasks)
-
-	for _, id := range openTasks {
-		printTask(t.currentList().Tasks[id])
-	}
-	fmt.Print("\n")
-	for _, id := range doneTasks {
+	for _, id := range tasks {
 		printTask(t.currentList().Tasks[id])
 	}
 }
@@ -105,13 +101,28 @@ func (t *TaskList) storeTask(Id int) error {
 	return nil
 }
 
+// Stores all done tasks
+func (t *TaskList) storeAll() {
+	count := 0
+	for Id := range t.currentList().Tasks {
+		val := t.currentList().Tasks[Id]
+		if val.Status == Done {
+			val.Status = Stored
+			t.currentList().Tasks[Id] = val
+			count++
+		}
+	}
+	fmt.Println("Stored", count, "tasks")
+}
+
 // Deletes a task from the task list.
 func (t *TaskList) delTask(Id int) error {
 	if _, ok := t.currentList().Tasks[Id]; !ok {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
+	desc := t.currentList().Tasks[Id].Description
 	delete(t.currentList().Tasks, Id)
-	fmt.Println("Deleted Task", Id, "-", newTask.Description)
+	fmt.Println("Deleted Task", Id, "-", desc)
 	return nil
 }
 
@@ -129,7 +140,7 @@ func (t *TaskList) editTask(Id int, newDesc string) error {
 
 // Display the help menu.
 func displayHelp() {
-	fmt.Println("New List:")
+	fmt.Println("\nNew List:")
 	fmt.Println("tl init\n")
 
 	fmt.Println("Add Task:")
@@ -147,10 +158,13 @@ func displayHelp() {
 	fmt.Println("Store Task:")
 	fmt.Println("tl store 0\n")
 
+	fmt.Println("Store All Done Tasks:")
+	fmt.Println("tl store all\n")
+
 	fmt.Println("Delete Task:")
 	fmt.Println("tl del 0\n")
 
-	fmt.Println("Add Project:")
+	fmt.Println("\nAdd Project:")
 	fmt.Println("tl p add projectname\n")
 
 	fmt.Println("List Projects:")
