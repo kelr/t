@@ -23,7 +23,7 @@ Binaries can be found at [releases][rel].
 [rel]: https://github.com/kelr/tl/releases
 
 ## Usage
-Tasks are stored in .tasks.json per directory.
+tl looks for tasks in `.tasks.json` in the cwd.
 
 ### New list
 ```tl init```

@@ -111,7 +111,7 @@ func (t *TaskList) delTask(Id int) error {
 		return fmt.Errorf("Cannot find Task %d", Id)
 	}
 	delete(t.currentList().Tasks, Id)
-	fmt.Println("Deleted Task", Id)
+	fmt.Println("Deleted Task", Id, "-", newTask.Description)
 	return nil
 }
 
