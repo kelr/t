@@ -16,15 +16,20 @@ func createTaskFile() error {
 	return nil
 }
 
-// Opens the task file and read the contents into the TaskList.
+// Opens the task file and read the contents into the TaskList. File must exist.
 func (tl *TaskList) loadTasks() error {
 	f, err := os.OpenFile(taskFile, os.O_RDWR, 0755)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
+	return tl.decodeFile(f)
+}
 
-	if err = json.NewDecoder(f).Decode(tl); err == io.EOF {
+// Decode the contents of a file into a TaskList struct
+func (tl *TaskList) decodeFile(file *os.File) error {
+	err := json.NewDecoder(file).Decode(tl)
+	if err == io.EOF {
 		err = nil
 	}
 	return err
@@ -37,10 +42,15 @@ func (tl *TaskList) flushTasks() error {
 		return err
 	}
 	defer f.Close()
+	return tl.encodeFile(f)
+}
 
-	enc := json.NewEncoder(f)
+// Encode the contents of a TaskList struct into a file
+func (tl *TaskList) encodeFile(file *os.File) error {
+	enc := json.NewEncoder(file)
 	enc.SetIndent("", " ")
-	if err = enc.Encode(tl); err == io.EOF {
+	err := enc.Encode(tl)
+	if err == io.EOF {
 		err = nil
 	}
 	return err
