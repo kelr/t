@@ -5,25 +5,9 @@ import (
 	"sort"
 )
 
-const (
-	InfoColor    = "\033[1;34m%s\033[0m"
-	NoticeColor  = "\033[1;36m%s\033[0m"
-	WarningColor = "\033[1;33m%s\033[0m"
-	ErrorColor   = "\033[1;31m%s\033[0m"
-	DebugColor   = "\033[0;36m%s\033[0m"
-)
-
-// Prints the current task list.
-func (t *TaskList) listTasks() {
-	fmt.Println("\n" + t.CurrentProject)
-	t.listStatus(Open)
-	t.listStatus(Done)
-}
-
 // Prints tasks by status
-func (t *TaskList) listStatus(status Status) {
-	fmt.Println("")
-	currList := t.currentList()
+func buildListStatus(currList Project, status Status) (out string) {
+	out += "\n"
 	var tasks []int
 	for key := range currList.Tasks {
 		if currList.Tasks[key].Status == status {
@@ -32,8 +16,9 @@ func (t *TaskList) listStatus(status Status) {
 		sort.Ints(tasks)
 	}
 	for _, id := range tasks {
-		printTask(currList.Tasks[id])
+		out += printTask(currList.Tasks[id])
 	}
+	return out
 }
 
 // Get the next available task Id.
@@ -187,11 +172,10 @@ func displayHelp() {
 }
 
 // Prints out a single task.
-func printTask(task Task) {
+func printTask(task Task) string {
 	status := "[ ]"
 	if task.Status != Open {
 		status = "[X]"
 	}
-	fmt.Printf("%s    %-5v", status, task.Id)
-	fmt.Println(task.Description)
+	return fmt.Sprintf("%s    %-5v %s\n", status, task.Id, task.Description)
 }
