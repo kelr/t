@@ -7,14 +7,10 @@ import (
 type Status int
 
 const (
-	taskFile    = ".tasks.json"
-	mainProject = "main"
-)
-
-const (
 	Open Status = iota
 	Done
 	Stored
+	mainProject = "main"
 )
 
 // TaskList contains a map of projects and the key to the current project
@@ -56,15 +52,15 @@ func (t *TaskList) currentList() Project {
 
 func main() {
 	handler := newArgHandler(newTaskList())
-	handler.RegisterHandler("", handleList)
-	handler.RegisterHandler("init", handleInit)
-	handler.RegisterHandler("list", handleList)
-	handler.RegisterHandler("add", handleTaskAdd)
-	handler.RegisterHandler("del", handleTaskDel)
-	handler.RegisterHandler("edit", handleTaskEdit)
-	handler.RegisterHandler("done", handleTaskDone)
-	handler.RegisterHandler("store", handleTaskStore)
-	handler.RegisterHandler("p", handleProject)
-	handler.RegisterHandler("help", handleHelp)
-	handler.Handle(os.Args)
+	handler.registerHandler("", handleList)
+	handler.registerHandler("init", handleInit)
+	handler.registerHandler("list", handleList)
+	handler.registerHandler("add", handleTaskAdd)
+	handler.registerHandler("del", handleTaskDel)
+	handler.registerHandler("edit", handleTaskEdit)
+	handler.registerHandler("done", handleTaskDone)
+	handler.registerHandler("store", handleTaskStore)
+	handler.registerHandler("p", handleProject)
+	handler.registerHandler("help", handleHelp)
+	handler.handle(os.Args)
 }

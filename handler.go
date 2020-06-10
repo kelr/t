@@ -7,21 +7,25 @@ import (
 	"strings"
 )
 
+// ArgHandler contains a map of handlers
 type ArgHandler struct {
-	handlers map[string]handlerEntry
+	handlers map[string]HandlerEntry
 	tl       *TaskList
 }
 
-type handlerEntry struct {
+// HandlerEntry contains a handler func and the command its registered to
+type HandlerEntry struct {
 	handler func(*TaskList, []string)
 	command string
 }
 
+// Creates a new ArgHandler
 func newArgHandler(tl *TaskList) *ArgHandler {
-	return &ArgHandler{make(map[string]handlerEntry), tl}
+	return &ArgHandler{make(map[string]HandlerEntry), tl}
 }
 
-func (h *ArgHandler) RegisterHandler(command string, handlerFunc func(*TaskList, []string)) {
+// Register a handler func to a command.
+func (h *ArgHandler) registerHandler(command string, handlerFunc func(*TaskList, []string)) {
 	if handlerFunc == nil {
 		fmt.Println("Attempted to register nil handler")
 		os.Exit(1)
@@ -34,12 +38,14 @@ func (h *ArgHandler) RegisterHandler(command string, handlerFunc func(*TaskList,
 	h.handlers[command] = handlerEntry{handler: handlerFunc, command: command}
 }
 
-func (h *ArgHandler) Handle(args []string) {
+// Determine what handler to call for incoming arg slice and call it
+func (h *ArgHandler) handle(args []string) {
 	command := ""
-	var extraArgs []string
 	if len(args) > 1 {
 		command = args[1]
 	}
+
+	var extraArgs []string
 	if len(args) > 2 {
 		extraArgs = args[2:]
 	}
@@ -51,6 +57,7 @@ func (h *ArgHandler) Handle(args []string) {
 	}
 }
 
+// Handles an init command by creating a new task file if it does not exist.
 func handleInit(tl *TaskList, args []string) {
 	if err := createTaskFile(); err != nil {
 		fmt.Println("A Task File already exists in the current directory.")
@@ -58,11 +65,13 @@ func handleInit(tl *TaskList, args []string) {
 	fmt.Println("Created a new Task File.")
 }
 
+// Handles a list command, prints out all or part of the current task list.
 func handleList(tl *TaskList, args []string) {
 	if err := tl.loadTasks(); err != nil {
 		fmt.Println(err)
 		return
 	}
+
 	currList := tl.currentList()
 	var output string
 	if len(args) == 0 {
@@ -86,6 +95,7 @@ func handleList(tl *TaskList, args []string) {
 	fmt.Print(output)
 }
 
+// Handles an add command, adds a task to the list.
 func handleTaskAdd(tl *TaskList, args []string) {
 	if err := tl.loadTasks(); err != nil {
 		fmt.Println(err)
@@ -102,6 +112,7 @@ func handleTaskAdd(tl *TaskList, args []string) {
 	}
 }
 
+// Handles a del command, deletes a task from the list.
 func handleTaskDel(tl *TaskList, args []string) {
 	if err := tl.loadTasks(); err != nil {
 		fmt.Println(err)
@@ -125,6 +136,7 @@ func handleTaskDel(tl *TaskList, args []string) {
 	}
 }
 
+// Handles an edit command, edits a task in the list.
 func handleTaskEdit(tl *TaskList, args []string) {
 	if err := tl.loadTasks(); err != nil {
 		fmt.Println(err)
@@ -148,6 +160,7 @@ func handleTaskEdit(tl *TaskList, args []string) {
 	}
 }
 
+// Handles a done command, completes a task in the list or uncompletes a already done task.
 func handleTaskDone(tl *TaskList, args []string) {
 	if err := tl.loadTasks(); err != nil {
 		fmt.Println(err)
@@ -171,6 +184,7 @@ func handleTaskDone(tl *TaskList, args []string) {
 	}
 }
 
+// Handles a store command, stores a done task or unstores a stored task.
 func handleTaskStore(tl *TaskList, args []string) {
 	if err := tl.loadTasks(); err != nil {
 		fmt.Println(err)
@@ -198,6 +212,7 @@ func handleTaskStore(tl *TaskList, args []string) {
 	}
 }
 
+// Handles a p command, does project specific operations.
 func handleProject(tl *TaskList, args []string) {
 	if err := tl.loadTasks(); err != nil {
 		fmt.Println(err)
@@ -241,6 +256,7 @@ func handleProject(tl *TaskList, args []string) {
 	}
 }
 
+// Handles a help command, displays help prompts.
 func handleHelp(tl *TaskList, args []string) {
 	displayHelp()
 }

@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+const (
+	taskFile = ".tasks.json"
+)
+
 // Creates the task file. Returns a non nil error if the file already exists.
 func createTaskFile() error {
 	f, err := os.OpenFile(taskFile, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0755)

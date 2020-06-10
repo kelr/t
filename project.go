@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// listProjects prints a list of available projects
 func (t *TaskList) listProjects() {
 	for name := range t.Projects {
 		if name == t.CurrentProject {
@@ -14,6 +15,7 @@ func (t *TaskList) listProjects() {
 	}
 }
 
+// switchProject switches the current project.
 func (t *TaskList) switchProject(name string) {
 	if _, ok := t.Projects[name]; ok {
 		t.CurrentProject = name
@@ -23,6 +25,7 @@ func (t *TaskList) switchProject(name string) {
 	}
 }
 
+// addProject adds a new project.
 func (t *TaskList) addProject(name string) {
 	if _, ok := t.Projects[name]; ok {
 		fmt.Println("Project", name, "already exists")
@@ -32,6 +35,7 @@ func (t *TaskList) addProject(name string) {
 	}
 }
 
+// editProject edits a current project's name
 func (t *TaskList) editProject(name string, newName string) {
 	if _, ok := t.Projects[name]; ok {
 		if _, ok := t.Projects[newName]; ok {
@@ -49,6 +53,7 @@ func (t *TaskList) editProject(name string, newName string) {
 	}
 }
 
+// delProject deletes a project.
 func (t *TaskList) delProject(name string) {
 	if name == t.CurrentProject {
 		fmt.Println("Cannot delete project while it is currently selected")

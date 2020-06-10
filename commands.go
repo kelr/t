@@ -5,7 +5,7 @@ import (
 	"sort"
 )
 
-// Prints tasks by status
+// Builds a list of tasks by status
 func buildListStatus(currList Project, status Status) (out string) {
 	out += "\n"
 	var tasks []int
