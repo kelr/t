@@ -35,7 +35,7 @@ func (h *ArgHandler) registerHandler(command string, handlerFunc func(*TaskList,
 		os.Exit(1)
 	}
 
-	h.handlers[command] = handlerEntry{handler: handlerFunc, command: command}
+	h.handlers[command] = HandlerEntry{handler: handlerFunc, command: command}
 }
 
 // Determine what handler to call for incoming arg slice and call it
