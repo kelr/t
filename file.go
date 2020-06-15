@@ -2,8 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
+)
+
+const (
+	taskFile = ".tasks.json"
 )
 
 // Creates the task file. Returns a non nil error if the file already exists.
@@ -20,7 +25,13 @@ func createTaskFile() error {
 func (tl *TaskList) loadTasks() error {
 	f, err := os.OpenFile(taskFile, os.O_RDWR, 0755)
 	if err != nil {
-		return err
+		// Handle PathError specifically as it indicates the file does not exist
+		if _, ok := err.(*os.PathError); ok {
+			fmt.Println("No task file found. Use 'tl init' to start a new task list here")
+			os.Exit(0)
+		} else {
+			return err
+		}
 	}
 	defer f.Close()
 	return tl.decodeFile(f)

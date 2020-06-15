@@ -55,9 +55,10 @@ If the task is already stored, this will un-store it.
 
 This is permanent.
 
-### Delete all stored tasks
-```tl del store```
-
+### Show specific lists
+```tl list all```
+```tl list store```
+```tl list done```
 
 ## Using Projects
 Each task file can store multiple projects.
@@ -79,6 +80,7 @@ The default project is called main.
 ### Delete project
 ```tl p del bettername```
 
+Deleting a project is permanent.
 
 
 ## Contributions
