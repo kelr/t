@@ -101,7 +101,7 @@ func handleTaskAdd(tl *TaskList, args []string) {
 		fmt.Println(err)
 		return
 	}
-	if len(args) > 1 {
+	if len(args) > 0 {
 		tl.addTask(strings.Join(args[0:], " "))
 		if err := tl.flushTasks(); err != nil {
 			fmt.Println(err)
