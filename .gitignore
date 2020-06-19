@@ -17,3 +17,5 @@
 # Default Task list
 .tasks.json
 
+# Release binary directory
+release
