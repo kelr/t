@@ -14,7 +14,6 @@ tl aims to provide the simplicity of [t][tlink] with some of the features of [ul
 ### Compile from Source
 ```bash
 go get github.com/kelr/tl
-go install github.com/kelr/tl
 ```
 
 ### Precompiled Binaries
